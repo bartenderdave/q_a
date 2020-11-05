@@ -1,0 +1,143 @@
+<%- include('partials/header'); -%>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<section>
+<h1 id="question"></h1>
+<h2 id="qAuthor"></h2>
+
+    
+
+    
+ <% if (user) { %>
+<div class="aLink">
+<a id="aLink">Add Answer</a>
+</div>
+      <% } else { %>
+<div class="aLink">
+<a id="aLink" href="/login">Add Answer</a>
+</div> 
+      <% } %>    
+    
+    
+    
+    
+
+<div id="answers"> 
+<h1>Answers:</h1>
+
+</div>
+    
+</section>
+
+<script>
+    const readable = async() =>{
+        
+    var url = window.location.href;
+    var pathName = new URL(url).pathname;
+    pathName = pathName.split("/");
+    pathName = pathName[2];
+    console.log(pathName);
+    host = location.hostname;  
+        
+        
+        
+ <% if (user) { %>
+    answerUrl = host + `/`+ pathName + '/answer'
+    $("#aLink").attr("href", answerUrl) 
+      <% } else { %>
+
+      <% } %>       
+
+    const getQuestion = async() => {
+     try {
+            const response = await fetch(host + `/`+ pathName, {
+                method: 'GET',
+                credentials: 'same-origin'
+            });
+            const question = await response.json();
+            $("#question").text(question.body);
+            
+            return question;
+    } catch (error) {
+            console.error(error);
+        }
+            
+        
+    };
+    
+    const getAnswers = async() => {
+      try {
+            const response = await fetch(host + `/`+ pathName + '/answers', {
+                method: 'GET',
+                credentials: 'same-origin'
+            }); 
+            const answers = await response.json();
+            return answers;
+            
+     } catch (error) {
+            console.error(error);
+        }  
+        
+        
+    };
+
+    const getAuthors = async() => {
+         try {
+            const response = await fetch(host + `/users`, {
+                method: 'GET',
+                credentials: 'same-origin'
+            }); 
+            const authors = await response.json();
+            return authors;
+            
+     } catch (error) {
+            console.error(error);
+        }  
+                    
+};
+        
+        
+        
+    const crossRef = async() => {
+        QAId = question.author;
+        for(a in authors){
+            if(authors[a]._id == QAId){
+                $("#qAuthor").text('asked by ' + authors[a].name);
+            }};
+        
+        for(x in answers){
+            delete answers[x]._id;
+            delete answers[x].question;
+            delete answers[x].__v;
+            
+            for(y in authors){
+                if(authors[y]._id == answers[x].author){
+                    answers[x].author = authors[y].name;
+                };
+            };
+        };
+        
+        for(z in answers){
+            var element = "<p>" + answers[z].author + ": " + answers[z].body + "</p>"  
+            $("#answers").append(element);
+        }
+        
+          
+        
+        
+    }    
+        const question = await getQuestion();
+        const answers = await getAnswers();
+        const authors = await getAuthors();
+        crossRef();
+        
+    }
+
+readable();
+    
+   
+
+
+</script>
+<%- include('partials/footer'); -%>

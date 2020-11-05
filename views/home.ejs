@@ -1,0 +1,277 @@
+<%- include('partials/header'); -%>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+
+
+
+
+  <section>
+    
+      <h2> Questions: </h2>
+    
+      <div id="search">
+      <input id="search-input" class="form-control" type="text" placeholder="search"
+      </div>
+
+    <table class="table table-dark" id="q-table">
+          <thead class="thead-dark">
+        <tr  class="bg-info">
+            <th data-column ="author" data-order = "desc">Author &#9650</th>
+            <th data-column ="question" data-order = "desc">Question &#9650</th>
+            <th data-column ="category" data-order = "desc">Category &#9650</th>
+            <th data-column ="answers" data-order = "desc">Answers &#9650</th>
+        </tr>
+          
+        <tbody id="myTable">
+          </tbody>
+      </table>
+      
+    <div class="container ">
+        <div id="pagination-wrapper"></div>
+    </div>
+      
+      
+<script>
+
+//get all questions in JSON
+const readable = async(event, value) => {
+    var allQuestions;
+    var allUsers;
+    host = location.hostname;  
+    
+    const getQuestions = async() => {
+            try {
+                const response = await fetch(host + `/questions`, {
+                    method: 'GET',
+                    credentials: 'same-origin'
+                });
+                const allQuestions = await response.json();
+                
+                return allQuestions;
+            } catch (error) {
+                console.error(error);
+            }
+        };
+    
+    const getUsers = async() => {
+        try {
+            const response = await fetch(host + `/users`, {
+                method: 'GET',
+                credentials: 'same-origin'
+            });
+            const allUsers = await response.json();
+            return allUsers;
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const returnTable = async () => {
+        allQuestions = await getQuestions();
+        allUsers = await getUsers();
+        var name;
+        for (i in allQuestions){
+            allQuestions[i].answers = allQuestions[i].answers.length;
+            delete allQuestions[i].__v;
+            name = allQuestions[i].author;
+            for (j in allUsers){
+                if (allUsers[j]._id == name){
+                    var z;
+                    z = allUsers[j].name;
+                    allQuestions[i].author = z;
+                }
+            } 
+        }
+        return await allQuestions.reverse();
+    };
+
+    const buildTable = async(data) => {
+        var paginated = await pagination(state.querySet, state.page, state.rows);
+        myData = paginated.querySet;
+                
+        var table = document.getElementById('myTable');
+
+        table.innerHTML = '';
+        
+        if(data){
+            for (var i = 0; i < data.length; i++){
+                var row = `<tr>
+                                <td>${data[i].author}</td>
+                                <td>${data[i].body}</td>
+                                <td>${data[i].category}</td>
+                                <td><a href="/questions/${data[i]._id}">${data[i].answers}</a></td>
+                          </tr>`
+                table.innerHTML += row;
+            };
+            
+        }else{
+            for (var i = 0; i < myData.length; i++){
+                var row = `<tr>
+                            <td>${myData[i].author}</td>
+                            <td>${myData[i].body}</td>
+                            <td>${myData[i].category}</td>
+                            <td><a href="/questions/${myData[i]._id}">${myData[i].answers}</a></td>
+                      </tr>`
+                table.innerHTML += row;
+        }};
+          
+        pageButtons(paginated.pages);
+    };
+    
+    const searchTable = async (value) => {
+        var searchedData = await returnTable();
+        var filteredData = [];
+        
+        for(i in searchedData){
+            value = value.toLowerCase();
+            var author = searchedData[i].author.toLowerCase();
+            var body = searchedData[i].body.toLowerCase();
+            var category = searchedData[i].category.toLowerCase();
+            
+            if(author.includes(value) || body.includes(value) || category.includes(value)){
+                filteredData.push(searchedData[i])
+            };   
+        };
+        return await buildTable(filteredData);
+    };
+    
+    const sortTable = async (value) => {
+        console.log(state.page);
+        var column = value.data('column');
+		var order = value.data('order');
+		var text = value.html();
+		text = text.substring(0, text.length - 1);
+        var sorted  = await returnTable();
+
+        if(order == 'desc'){
+			$(value).data('order', "asc");
+			sorted = sorted.sort((a,b) => a[column] > b[column] ? 1 : -1);
+			text += '&#9660';
+
+		}else{
+			$(value).data('order', "desc");
+			sorted = sorted.sort((a,b) => a[column] < b[column] ? 1 : -1);
+			text += '&#9650';
+		}
+        
+		$(value).html(text);
+        await buildTable(sorted);
+        
+        
+    };
+        
+    var state = {
+        'querySet': await returnTable(),
+
+        'page': 1,
+        'rows': 5,
+        'window': 5,
+    }; 
+    
+    const pagination = async (querySet, page, rows) => {
+        var trimStart = (page - 1) * rows;
+        var trimEnd = trimStart + rows;
+        var trimmedData = querySet.slice(trimStart, trimEnd);
+        var pages = Math.round(querySet.length / rows);
+                
+        return {
+            'querySet': trimmedData,
+            'pages': pages,
+        };
+    }; 
+    
+    const pageButtons = async (pages) => {
+        var wrapper = document.getElementById('pagination-wrapper');
+
+        wrapper.innerHTML = ``;
+
+        var maxLeft = (state.page - Math.floor(state.window / 2));
+        var maxRight = (state.page + Math.floor(state.window / 2));
+
+        if (maxLeft < 1) {
+            maxLeft = 1;
+            maxRight = state.window;
+        }
+
+        if (maxRight > pages) {
+            maxLeft = pages - (state.window - 1);
+
+            if (maxLeft < 1){
+                maxLeft = 1;
+            }
+            maxRight = pages;
+        }
+
+        for (var page = maxLeft; page <= maxRight; page++) {
+            wrapper.innerHTML += `<button value=${page} class="page btn btn-sm btn-info">${page}</button>`;
+        }
+
+        if (state.page != 1) {
+            wrapper.innerHTML = `<button value=${1} class="page btn btn-sm btn-info">&#171; First</button>` + wrapper.innerHTML;
+        }
+
+        if (state.page != pages) {
+            wrapper.innerHTML += `<button value=${pages} class="page btn btn-sm btn-info">Last &#187;</button>`;
+        }
+
+        $('.page').on('click', function() {
+            $('#table-body').empty();
+            state.page = Number($(this).val());
+            buildTable();
+        });
+    }; 
+    
+    if(event === undefined){
+        await buildTable();
+    }else if(event == 'search'){
+        await searchTable(value);   
+    }else if (event == 'sort'){
+        await sortTable(value);
+    } 
+};
+    
+readable();
+    
+    
+$('#search-input').on('keyup', function(){
+    var value = $(this).val();
+    event = 'search';
+    readable(event, value);
+});
+    
+$('th').on('click', function(){
+    event = 'sort';
+    readable(event, $(this));
+});
+
+    
+  
+$(document).ready(function(){        
+    $("nav").css("display", "flex");
+    $(".table .thead-dark th ").css("background-color", "#5f33c1");    
+    
+    
+});
+$(document).ready(function() {
+    var dataTable = $('#q-table').DataTable({
+    "bLengthChange" : false,
+    "bInfo": false,
+    "bfiltering": false,
+    "lengthMenu": [[4, 6, 8, -1], [4, 6, 8, "All"]],
+    "bPaginate": false
+});
+ 
+});
+</script>
+      
+      
+      
+      
+      
+      
+</section>
+
+
+<%- include('partials/footer'); -%>

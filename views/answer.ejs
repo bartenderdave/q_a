@@ -1,0 +1,66 @@
+<%- include('partials/header'); -%>
+
+<section>
+
+<form action="/answer">
+  <h2>Add Answer</h2>
+  <label for="email">Your Answer</label>
+  <input type="text" name="answer" required />
+  <div class="answer error"></div>
+  <button>Post Answer</button>
+</form>
+
+</section>
+<%- include('partials/footer'); -%>
+
+<script>
+    const form = document.querySelector('form');
+    const answerError = document.querySelector('.answer.error');
+    
+    var url = window.location.href;
+    var pathName = new URL(url).pathname;
+    pathName = pathName.split("/");
+    pathName = pathName[1];
+    
+
+  
+    
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // reset errors
+    answerError.textContent = '';
+    
+    // get values 
+    const body = form.answer.value;
+    const author = '<%= user._id%>';
+    host = location.hostname;  
+      
+    try {
+      const res = await fetch(host + '/' + pathName + '/answers', { 
+        method: 'POST', 
+        body: JSON.stringify({ body, author }),
+        headers: {'Content-Type': 'application/json'}
+      });
+      const data = await res.json();
+      console.log(data);
+      if (data.errors) {
+        answerError.textContent = data.errors;
+        
+      }
+      if (data.body) {
+        location.assign('/questions/' + pathName);
+      }
+
+    }
+    catch (err) {
+      console.log(err);
+    }
+
+  });
+</script>
+
+
+
+

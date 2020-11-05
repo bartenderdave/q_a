@@ -1,0 +1,25 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q/A</title>
+  <link rel="stylesheet" href="/styles.css">
+    
+</head>
+<body>
+  <nav>
+    <div class="logo">
+    <h1><a href="/">Q/A</a></h1>
+    </div>
+    <ul class="nav-links">
+      <% if (user) { %>
+        <li><a href="/logout">Log out</a></li>
+        <li><a href="/ask">Ask a Question</a></li>
+        <li id="userPage">Hello, <%= user.name%></li>
+      <% } else { %>
+        <li><a href="/login">Log in</a></li>
+        <li><a href="/signup">Sign up</a></li>
+      <% } %>
+    </ul>
+  </nav>
+  
