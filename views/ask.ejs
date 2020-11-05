@@ -24,7 +24,7 @@ $(document).ready(function(){
     $("#invisible").css("display", "none");   
     var id = $('#invisible').text();
     host = location.hostname;  
-    var url = '/id + '/questions';
+    var url = '/' + id + '/questions';
     
     const form = document.querySelector('form');
     const questionError = document.querySelector('.question.error');
@@ -62,7 +62,7 @@ $(document).ready(function(){
       };
         
       if (data.body) {
-        location.assign('/home');
+        location.assign('/');
       }
 
     }
