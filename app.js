@@ -10,7 +10,7 @@ const app = express();
 
 //MongoDB:
 const url = process.env.ATLAS;
-mongoose.connect(url, { useNewUrlParser: true,  useUnifiedTopology: true, useCreateIndex: true  });
+mongoose.connect(url, { useNewUrlParser: true,  useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false,  });
 
 const db = mongoose.connection
 db.once('open', _ => {
