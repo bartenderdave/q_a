@@ -9,7 +9,7 @@ const app = express();
 
 
 //MongoDB:
-const url = "mongodb://localhost:27017/q_a";
+const url = process.env.ATLAS;
 mongoose.connect(url, { useNewUrlParser: true,  useUnifiedTopology: true, useCreateIndex: true  });
 
 const db = mongoose.connection
