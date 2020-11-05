@@ -43,7 +43,7 @@
         
         
  <% if (user) { %>
-    answerUrl = host + `/`+ pathName + '/answer'
+    answerUrl = `/`+ pathName + '/answer'
     $("#aLink").attr("href", answerUrl) 
       <% } else { %>
 
@@ -51,7 +51,7 @@
 
     const getQuestion = async() => {
      try {
-            const response = await fetch(host + `/`+ pathName, {
+            const response = await fetch(`/`+ pathName, {
                 method: 'GET',
                 credentials: 'same-origin'
             });
@@ -68,7 +68,7 @@
     
     const getAnswers = async() => {
       try {
-            const response = await fetch(host + `/`+ pathName + '/answers', {
+            const response = await fetch(`/`+ pathName + '/answers', {
                 method: 'GET',
                 credentials: 'same-origin'
             }); 
@@ -84,7 +84,7 @@
 
     const getAuthors = async() => {
          try {
-            const response = await fetch(host + `/users`, {
+            const response = await fetch(`/users`, {
                 method: 'GET',
                 credentials: 'same-origin'
             }); 
