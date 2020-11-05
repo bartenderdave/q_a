@@ -43,7 +43,7 @@ const readable = async(event, value) => {
     
     const getQuestions = async() => {
             try {
-                const response = await fetch(host + `/questions`, {
+                const response = await fetch(`/questions`, {
                     method: 'GET',
                     credentials: 'same-origin'
                 });
@@ -57,7 +57,7 @@ const readable = async(event, value) => {
     
     const getUsers = async() => {
         try {
-            const response = await fetch(host + `/users`, {
+            const response = await fetch(`/users`, {
                 method: 'GET',
                 credentials: 'same-origin'
             });
