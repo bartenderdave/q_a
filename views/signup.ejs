@@ -54,7 +54,8 @@
         nameError.textContent = data.errors.password;
       }
       if (data.user) {
-        location.assign('/');
+        host = location.hostname; 
+        location.assign(host + '/');
       }
 
     }
