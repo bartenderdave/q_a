@@ -118,7 +118,6 @@ const readable = async(event, value) => {
         }};
           
         pageButtons(paginated.pages);
-        console.log(pages);
     };
     
     const searchTable = async (value) => {
@@ -185,7 +184,7 @@ const readable = async(event, value) => {
     
     const pageButtons = async (pages) => {
         var wrapper = document.getElementById('pagination-wrapper');
-
+        console.log(pages);
         wrapper.innerHTML = ``;
 
         var maxLeft = (state.page - Math.floor(state.window / 2));
