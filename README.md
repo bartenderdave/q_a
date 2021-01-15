@@ -30,4 +30,5 @@ Next, simply build the application on the sever of your choice via GitHub.
 In order for the server to properly build the application the procfile should include the follwoing:
     web: node app.js
     
-# Suggestion: store the URL for the connection to the database directly on the commercially available server in a variable, and reference it from the code to achieve security.
+# Suggestion: 
+store the URL for the connection to the database directly on the commercially available server in a variable, and reference it from the code to achieve security.
