@@ -12,23 +12,24 @@ Technologies and Frameworks used: Node.js, ExpressJS, MongoDB, Mongoose, bcrypt,
 1. Create a completely empty repository on GitHub (no README.md)
 2. Change the current working directory on your computer to your local project
 3. Execute the following commands:
-    
-    $ git init
-    $ git add .
-    $ git commit -m "First commit"
-    $ git remote add origin remote_empty_repository_URL (use SSH url for private)
-    $ git remote -v
-    $ git push -u origin master
+        
+        $ git init
+        $ git add .
+        $ git commit -m "First commit"
+        $ git remote add origin remote_empty_repository_URL (use SSH url for private)
+        $ git remote -v
+        $ git push -u origin master
 
 When using GitHub for express or any other node.js project create a file called .gitignore in the root directory of your project with the following content:
     
-    .env
-    node_modules
+        .env
+        node_modules
     
 Next, simply build the application on the sever of your choice via GitHub.
 
 In order for the server to properly build the application the procfile should include the follwoing:
-    web: node app.js
+
+        web: node app.js
     
 # Suggestion: 
 store the URL for the connection to the database directly on the commercially available server in a variable, and reference it from the code to achieve security.
