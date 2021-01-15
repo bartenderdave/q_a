@@ -5,7 +5,7 @@ by Bartender_Dave
 # Description:
 A simple Q&A-themed web application. Users have the ability to sign up and login, ask and answer questions, as well as, read, sort and search through existing ones. Viewing questions is available to all users, however in order to ask or answer questions the user has to be authenticated.
 
-Technologies and Frameworks used: Node.js, ExpressJS, MongoDB, Mongoose, bcrypt, JWT, EJS (as well as obvious HTML and CSS).
+Technologies and Frameworks used: *Node.js, ExpressJS, MongoDB, Mongoose, bcrypt, JWT, EJS (as well as obvious HTML and CSS).
 
 # Deployment:
 
