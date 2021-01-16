@@ -8,6 +8,7 @@ A simple Q&A-themed web application. Users have the ability to sign up and login
 Technologies and Frameworks used: *Node.js, ExpressJS, MongoDB, Mongoose, bcrypt, JWT, EJS* (as well as obvious HTML and CSS).
 
 # Deployment:
+Follow the following steps to deploy the current project from your own github repository to a server:
 
 1. Create a completely empty repository on GitHub (no README.md)
 2. Change the current working directory on your computer to your local project
