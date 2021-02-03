@@ -2,6 +2,9 @@
 by Bartender_Dave 
 2021
 
+# Link to live build:
+https://davids-q-and-a.herokuapp.com/
+
 # Description:
 A simple Q&A-themed web application. Users have the ability to sign up and login, ask and answer questions, as well as, read, sort and search through existing ones. Viewing questions is available to all users, however in order to ask or answer questions the user has to be authenticated. Click the number of answers to view the answers page.
 
